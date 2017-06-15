@@ -38,6 +38,7 @@ class GameScreen extends JPanel implements ActionListener, ComponentListener, Ru
 	private static ArrayList<Enemy> enemies;
 	private static Vector2 goalPos;
 
+	public static boolean frozen; // Frozen gamestate
 	private static boolean winLose;
 
 	GameScreen(Dimension dim)
@@ -80,20 +81,11 @@ class GameScreen extends JPanel implements ActionListener, ComponentListener, Ru
 		timer = new Timer(delay, this);
 	}	// end constructor()
 
-	public void freeze(boolean yesOrNo)
-	{
-		//Placeholder: all relevant game states should be frozen here
-		mainChar.freeze(yesOrNo);
-		for(Enemy ene: enemies)
-			ene.freeze(yesOrNo);
-	}	// end method freeze
-
-	public static final Dimension getDlen() { return dlen; } // end method getDlen
-
 	public void init(String fileName)
 	{
 		gameScreen = new Thread(this);
 
+		frozen = false;
 		winLose = false;
 		enemies.clear();
 
@@ -149,12 +141,31 @@ class GameScreen extends JPanel implements ActionListener, ComponentListener, Ru
 		}
 	}	// end method actionPerformed
 
+	public void componentHidden(ComponentEvent e)
+	{
+		frozen = true;
+	}
+	public void componentMoved(ComponentEvent e){   }
+	public void componentShown(ComponentEvent e)
+	{
+		frozen = false;
+	}
+	public void componentResized(ComponentEvent e){   }
+
 	public static Block getBlocks(int y, int x)
 	{
 		return blocks[y+edW][x+edW];
 	}	// end method getBlocks
 
+	public static final Dimension getDlen() { return dlen; } // end method getDlen
+
 	public static Player getP() { return mainChar; } // end method getP
+
+	public boolean intersects(Vector2 a, Vector2 b)
+	{
+		int bLen = Block.getLen();
+		return (a.X < b.X + bLen && b.X < a.X + bLen && a.Y < b.Y + bLen && b.Y < a.Y + bLen);
+	}	// end method intersects
 
 	@Override // Superclass: JPanel
 	public void paintComponent(Graphics g)
@@ -175,23 +186,6 @@ class GameScreen extends JPanel implements ActionListener, ComponentListener, Ru
 		// Draws Main Character
 		mainChar.draw(g);
 	}	// end method paintComponent
-
-	public boolean intersects(Vector2 a, Vector2 b)
-	{
-		int bLen = Block.getLen();
-		return (a.X < b.X + bLen && b.X < a.X + bLen && a.Y < b.Y + bLen && b.Y < a.Y + bLen);
-	}	// end method intersects
-
-	public void componentShown(ComponentEvent e)
-	{
-		freeze(false);
-	}
-	public void componentHidden(ComponentEvent e)
-	{
-		freeze(true);
-	}
-	public void componentResized(ComponentEvent e){   }
-	public void componentMoved(ComponentEvent e){   }
 
 	@Override // Interface: Runnable
 	public void run()
