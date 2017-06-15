@@ -19,7 +19,6 @@ class HomingEnemy extends Enemy
 	private int[][] grid;
 	private int bfsDelay;
 
-
 	HomingEnemy(double x, double y)
 	{
 		super(x, y);
@@ -38,13 +37,6 @@ class HomingEnemy extends Enemy
 		idx = getIdx(); // Current Array Index Position
 		if(++bfsDelay >= delayLim)
 		{	// BFS every second
-			/* System.out.println(idx.width + " " + idx.height);
-			for(int k = 0; k < 4; ++k)
-			{
-				nxt = new Dimension(idx.width+moves[k][0], idx.height+moves[k][1]);
-				if(invalid(nxt)) continue;
-				System.out.println(nxt.width + " " + nxt.height + "; " + grid[nxt.height][nxt.width]);
-			} */
 			bfs();
 			bfsDelay = 0; // (int)-1E9;
 		}
@@ -63,10 +55,7 @@ class HomingEnemy extends Enemy
 			nxt = new Dimension(idx.width+moves[k][0], idx.height+moves[k][1]);
 			if(invalid(nxt)) continue;
 			if(grid[nxt.height][nxt.width] <= grid[idx.height][idx.width])
-			{
-				// if(bfsDelay==0) System.out.println("Set key: " + k);
 				setKey(k, true);
-			}
 		}
 		if(keysPressed[UP] && keysPressed[DOWN])
 			setKey((grid[idx.height-1][idx.width] < grid[idx.height+1][idx.width]) ? DOWN  :   UP, false);
@@ -74,7 +63,6 @@ class HomingEnemy extends Enemy
 			setKey((grid[idx.height][idx.width-1] < grid[idx.height][idx.width+1]) ? RIGHT : LEFT, false);
 		vx = vy = false;
 		updateVectors();
-		// this.vel.add(this.acc);
 		move(this.vel);
 	}	// end method advance
 
@@ -85,8 +73,6 @@ class HomingEnemy extends Enemy
 			for(int j = 0; j < GameScreen.getDlen().width; ++j)
 				grid[i][j] = INFN; // Initializes the grid
 		Dimension src = GameScreen.getP().getIdx();
-		// System.out.println(idx.width + " " + idx.height + " vs. " + src.width + " " + src.height);
-		// grid[src.height][src.width] = 0;
 		grid[src.height][src.width] = 0;
 		Q.add(src);
 		boolean run = true;
@@ -104,10 +90,6 @@ class HomingEnemy extends Enemy
 				}
 			}
 		}
-		// Printing
-		/* for(int i = 0; i < grid.length; ++i)
-		for(int j = 0; j < grid[i].length; ++j)
-			System.out.format("%2d " + ((j==grid[i].length-1)?"%n":""), (grid[i][j] < INFN) ? grid[i][j] : -1); */
 	}	// end method bfs
 
 	@Override // Superclass: Entity
