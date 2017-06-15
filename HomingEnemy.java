@@ -30,9 +30,8 @@ class HomingEnemy extends Enemy
 
 	public void advance()
 	{
-		if(frozen) return;
+		if(GameScreen.frozen) return;
 		// Directions are RELATIVE here ie. "R" in "Up" Field <--> "L" in "Down" (Normal) Field
-		// Stops at the edge of a cliff
 		updateField();
 		idx = getIdx(); // Current Array Index Position
 		if(++bfsDelay >= delayLim)
@@ -40,8 +39,6 @@ class HomingEnemy extends Enemy
 			bfs();
 			bfsDelay = 0; // (int)-1E9;
 		}
-		// for(int k = 0; k < 4; ++k)
-		//	setKey(k, false); // Release All
 		for(int k = 0; k < 4; ++k)
 		{
 			nxt = new Dimension(idx.width+moves[k][0], idx.height+moves[k][1]);
@@ -52,12 +49,10 @@ class HomingEnemy extends Enemy
 			}
 		}
 		if(keysPressed[UP] && keysPressed[DOWN])
-			setKey(DOWN, false);
+			setKey(DOWN, false); // Prioritize UP
 		if(keysPressed[RIGHT] && keysPressed[LEFT])
-			setKey(RIGHT, false);
+			setKey(RIGHT, false); // Prioritize LEFT
 		updateVectors();
-		// this.vel.add(this.acc);
-		// System.out.println(this.vel.X + " " + this.vel.Y);
 		move(this.vel);
 	}	// end method advance
 
@@ -85,10 +80,6 @@ class HomingEnemy extends Enemy
 				}
 			}
 		}
-		// Printing
-		// for(int i = 0; i < grid.length; ++i)
-		// for(int j = 0; j < grid[i].length; ++j)
-		//	System.out.format("%2d " + ((j==grid[i].length-1)?"%n":""), (grid[i][j] < INFN) ? grid[i][j] : -1);
 	}	// end method bfs
 
 	@Override // Superclass: Entity
