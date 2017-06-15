@@ -37,6 +37,7 @@ class NormalEnemy extends Enemy
 			setKey((getField() - RIGHT + 4) % 4, moveL ^ true); // Toggles "Right"
 		}
 		updateVectors();
+		this.vel.add(this.acc);
 		move(this.vel);
 	}	// end method advance
 
@@ -44,13 +45,12 @@ class NormalEnemy extends Enemy
 	public void draw(Graphics g)
 	{	// Hardcode image for Demo
 		g2D = (Graphics2D)g;
-		g2D.drawImage(Images.sprites[1][ getField() ][ movingRel(LEFT)?0:1 ],
-			(int)Math.round(pos.X), (int)Math.round(pos.Y), Block.getLen(), Block.getLen(), null);
+		g2D.drawImage(Images.sprites[1][ getField() ][ movingRel(LEFT)?0:1 ], this.x, this.y, lenB, lenB, null);
 	}	// end method draw
 
 	@Override // Superclass: Entity
 	public void updateField()
-	{	// For now, only Fields influence Acceleration, so hardcode
+	{
 		if(getField() != prevField)
 			for(int i = 0; i < 4; ++i)
 				setKey(i, false); // Release All
