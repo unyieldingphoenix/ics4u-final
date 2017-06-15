@@ -10,13 +10,15 @@ import java.util.ArrayDeque;
 class HomingEnemy extends Enemy
 {
 	private static final int INFN = 0x3F3F3F3F;
-	private static final int delayLim = GameScreen.FPS;
+	private static final int delayLim = GameScreen.FPS * 3 / 4;
 	private static int[][] moves = { { 0, -1 }, { +1, 0 }, { 0, +1 }, { -1, 0 } };
 
 	private Dimension cur, idx, nxt;
 	private ArrayDeque<Dimension> Q;
+
 	private int[][] grid;
 	private int bfsDelay;
+
 
 	HomingEnemy(double x, double y)
 	{
@@ -35,9 +37,26 @@ class HomingEnemy extends Enemy
 		updateField();
 		idx = getIdx(); // Current Array Index Position
 		if(++bfsDelay >= delayLim)
-		{	// BFS Every second
+		{	// BFS every second
+			/* System.out.println(idx.width + " " + idx.height);
+			for(int k = 0; k < 4; ++k)
+			{
+				nxt = new Dimension(idx.width+moves[k][0], idx.height+moves[k][1]);
+				if(invalid(nxt)) continue;
+				System.out.println(nxt.width + " " + nxt.height + "; " + grid[nxt.height][nxt.width]);
+			} */
 			bfs();
 			bfsDelay = 0; // (int)-1E9;
+		}
+		if(!vx)
+		{	// Reset X
+			setKey(LEFT, false);
+			setKey(RIGHT, false);
+		}
+		if(!vy)
+		{	// Reset Y
+			setKey(UP, false);
+			setKey(DOWN, false);
 		}
 		for(int k = 0; k < 4; ++k)
 		{
@@ -45,14 +64,17 @@ class HomingEnemy extends Enemy
 			if(invalid(nxt)) continue;
 			if(grid[nxt.height][nxt.width] <= grid[idx.height][idx.width])
 			{
+				// if(bfsDelay==0) System.out.println("Set key: " + k);
 				setKey(k, true);
 			}
 		}
 		if(keysPressed[UP] && keysPressed[DOWN])
-			setKey(DOWN, false); // Prioritize UP
+			setKey((grid[idx.height-1][idx.width] < grid[idx.height+1][idx.width]) ? DOWN  :   UP, false);
 		if(keysPressed[RIGHT] && keysPressed[LEFT])
-			setKey(RIGHT, false); // Prioritize LEFT
+			setKey((grid[idx.height][idx.width-1] < grid[idx.height][idx.width+1]) ? RIGHT : LEFT, false);
+		vx = vy = false;
 		updateVectors();
+		// this.vel.add(this.acc);
 		move(this.vel);
 	}	// end method advance
 
@@ -63,6 +85,8 @@ class HomingEnemy extends Enemy
 			for(int j = 0; j < GameScreen.getDlen().width; ++j)
 				grid[i][j] = INFN; // Initializes the grid
 		Dimension src = GameScreen.getP().getIdx();
+		// System.out.println(idx.width + " " + idx.height + " vs. " + src.width + " " + src.height);
+		// grid[src.height][src.width] = 0;
 		grid[src.height][src.width] = 0;
 		Q.add(src);
 		boolean run = true;
@@ -80,20 +104,23 @@ class HomingEnemy extends Enemy
 				}
 			}
 		}
+		// Printing
+		/* for(int i = 0; i < grid.length; ++i)
+		for(int j = 0; j < grid[i].length; ++j)
+			System.out.format("%2d " + ((j==grid[i].length-1)?"%n":""), (grid[i][j] < INFN) ? grid[i][j] : -1); */
 	}	// end method bfs
 
 	@Override // Superclass: Entity
 	public void draw(Graphics g)
 	{	// Hardcode image for Demo
 		g2D = (Graphics2D)g;
-		g2D.drawImage(Images.sprites[1][ DOWN ][ movingRel(LEFT)?0:1 ],
-			(int)Math.round(pos.X), (int)Math.round(pos.Y), Block.getLen(), Block.getLen(), null);
+		g2D.drawImage(Images.sprites[1][ DOWN ][ movingRel(LEFT)?0:1 ], this.x, this.y, lenB, lenB, null);
 	}	// end method draw
 
 	public boolean invalid(final Dimension d)
 	{
-		return	(d.width < 0) || (d.width >= GameScreen.getDlen().width) ||
-				(d.height < 0) || (d.height >= GameScreen.getDlen().height) ||
+		return	(d.width < 0) || (d.width >= GameScreen.getDlen().width-GameScreen.edW) ||
+				(d.height < 0) || (d.height >= GameScreen.getDlen().height-GameScreen.edW) ||
 				(GameScreen.getBlocks(d.height, d.width).getBlock() == Block.EARTH);
 	}	// end method invalid
 
