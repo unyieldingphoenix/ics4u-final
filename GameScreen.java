@@ -100,12 +100,12 @@ class GameScreen extends JPanel implements ActionListener, ComponentListener, Ru
 			for(int j = 0; j < blocks[i].length; ++j)
 			{
 				if(blocks[i][j].getBlock() == Block.ENEMY1)
-					enemies.add(new NormalEnemy((j-edW) * Block.getLen(), (i-edW) * Block.getLen()));
+					enemies.add(new NormalEnemy(j * Block.getLen(), i * Block.getLen()));
 				else if(blocks[i][j].getBlock() == Block.ENEMY2)
-					enemies.add(new HomingEnemy((j-edW) * Block.getLen(), (i-edW) * Block.getLen()));
+					enemies.add(new HomingEnemy(j * Block.getLen(), i * Block.getLen()));
 				else if(blocks[i][j].getBlock() == Block.PLAYER)
 				{
-					mainChar.setPos(new Vector2((j-edW) * Block.getLen(),  (i-edW) * Block.getLen()));
+					mainChar.setPos(new Vector2(j * Block.getLen(), i * Block.getLen()));
 					mainChar.setVel(new Vector2());
 				}
 				else	// Not a dynamic Block
@@ -154,7 +154,7 @@ class GameScreen extends JPanel implements ActionListener, ComponentListener, Ru
 
 	public static Block getBlocks(int y, int x)
 	{
-		return blocks[y+edW][x+edW];
+		return blocks[y][x];
 	}	// end method getBlocks
 
 	public static final Dimension getDlen() { return dlen; } // end method getDlen
@@ -178,7 +178,7 @@ class GameScreen extends JPanel implements ActionListener, ComponentListener, Ru
 		// Draws Blocks
 		for(int i = edW; i < blocks.length-edW; ++i)
 			for(int j = edW; j < blocks[i].length-edW; ++j)
-				blocks[i][j].draw(g, blocks[i-1][j].getBlock()==1);
+				blocks[i][j].draw(g, blocks[i-1][j].getBlock() == Block.EARTH);
 
 		// Draws Enemies
 		for(Enemy ene: enemies)
