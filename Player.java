@@ -18,10 +18,9 @@ class Player extends Entity
 	@Override // Superclass: Entity
 	public void advance()
 	{
-		if(frozen) return; // Skips Action if Frozen
+		if(GameScreen.frozen) return; // Skips Action if Frozen
 		updateField();
 		updateVectors();
-		this.vel.add(this.acc);
 		move(this.vel);
 	}	// end method advance
 
