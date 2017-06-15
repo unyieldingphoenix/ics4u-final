@@ -30,4 +30,4 @@ class Player extends Entity
 		g2D = (Graphics2D)g;
 		g2D.drawImage(Images.sprites[0][ getField() ][ movingRel(LEFT)?0:1 ], this.x, this.y, lenB, lenB, null);
 	}	// end method draw
-}	// end class
+}	// end class Player
