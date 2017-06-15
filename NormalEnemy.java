@@ -16,11 +16,10 @@ class NormalEnemy extends Enemy
 
 	public void advance()
 	{
-		if(frozen) return;
+		if(GameScreen.frozen) return;
 		// Directions are RELATIVE here ie. "R" in "Up" Field <--> "L" in "Down" (Normal) Field
 		// Stops at the edge of a cliff
 		updateField();
-		updateVectors();
 		if(movingRel(RIGHT))
 		{
 			if(!checkFarR(getField(), LOW) || checkFarR(getField(), ADJ))
@@ -38,7 +37,6 @@ class NormalEnemy extends Enemy
 			setKey((getField() - RIGHT + 4) % 4, moveL ^ true); // Toggles "Right"
 		}
 		updateVectors();
-		this.vel.add(this.acc);
 		move(this.vel);
 	}	// end method advance
 
