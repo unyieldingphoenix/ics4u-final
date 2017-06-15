@@ -14,7 +14,7 @@ class GameScreen extends JPanel implements ActionListener, Runnable, ComponentLi
 {
 	public static final int FPS = 40; // 20;
 	public static final int delay = 1000 / FPS;
-	private static final int edW = 1; // Edge Width around Screen
+	public static final int edW = 1; // Edge Width around Screen
 	private static final int WIFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
 	private static final String JUMP = "p.jump";
@@ -108,12 +108,12 @@ class GameScreen extends JPanel implements ActionListener, Runnable, ComponentLi
 			for(int j = 0; j < blocks[i].length; ++j)
 			{
 				if(blocks[i][j].getBlock() == Block.ENEMY1)
-					enemies.add(new NormalEnemy(j * Block.getLen(),  i * Block.getLen()));
+					enemies.add(new NormalEnemy((j-edW) * Block.getLen(), (i-edW) * Block.getLen()));
 				else if(blocks[i][j].getBlock() == Block.ENEMY2)
-					enemies.add(new HomingEnemy(j * Block.getLen(),  i * Block.getLen()));
+					enemies.add(new HomingEnemy((j-edW) * Block.getLen(), (i-edW) * Block.getLen()));
 				else if(blocks[i][j].getBlock() == Block.PLAYER)
 				{
-					mainChar.setPos(new Vector2((j-1) * Block.getLen(),  (i-1) * Block.getLen()));
+					mainChar.setPos(new Vector2((j-edW) * Block.getLen(),  (i-edW) * Block.getLen()));
 					mainChar.setVel(new Vector2());
 				}
 				else	// Not an Enemy
@@ -180,7 +180,7 @@ class GameScreen extends JPanel implements ActionListener, Runnable, ComponentLi
 	{
 		int bLen = Block.getLen();
 		return (a.X < b.X + bLen && b.X < a.X + bLen && a.Y < b.Y + bLen && b.Y < a.Y + bLen);
-	}
+	}	// end method intersects
 	
 	public void componentShown(ComponentEvent e)
 	{
