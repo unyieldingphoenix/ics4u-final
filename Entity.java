@@ -294,13 +294,6 @@ class Entity extends Rectangle
 				case  LEFT: setVel(new Vector2(+J_SPD, 0.0)); break;
 			}
 		}
-		/* 
-		else if(!keysPressed[UP]) //"cut" the jump if the button is released early
-		{
-			if(vel.Y < -1 * J_SPD_MIN)
-				vel.Y = (-1 * J_SPD_MIN);
-		} */
-
 		if(keysPressed[LEFT])
 		{
 			switch(getField())
@@ -321,5 +314,6 @@ class Entity extends Rectangle
 				case  LEFT: move(new Vector2(0.0, +1 * M_SPD)); break;
 			}
 		}
+		this.vel.add(this.acc);
 	}	// end method updateVectors
 }	// end class Entity
