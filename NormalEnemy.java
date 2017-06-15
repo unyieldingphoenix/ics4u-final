@@ -37,7 +37,6 @@ class NormalEnemy extends Enemy
 			setKey((getField() - RIGHT + 4) % 4, moveL ^ true); // Toggles "Right"
 		}
 		updateVectors();
-		this.vel.add(this.acc);
 		move(this.vel);
 	}	// end method advance
 
