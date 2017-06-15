@@ -31,7 +31,6 @@ class Entity
 	protected boolean[] keysPressedABS; //absolute keypress values
  	protected boolean[] keysPressed; //whether directional keys are pressed
 
-	protected boolean frozen; // False by default
 	protected boolean snapTo; // Snaps the User to the grid
 	protected int prevField = DOWN; // previous field the entity was in
 
@@ -120,15 +119,6 @@ class Entity
 	public void draw(Graphics g)
 	{
 	}	// end method draw
-
-	public void freeze(boolean yesOrNo)
-	{
-		frozen = yesOrNo;
-		if(!frozen) return;
-		// Clears movement if frozen
-		for(int i = 0; i < keysPressedABS.length; i++)
-			setKey(i, false);
-	}
 
 	public int getField()
 	{	// Returns the current Field of the Entity
